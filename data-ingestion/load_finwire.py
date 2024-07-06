@@ -17,7 +17,6 @@ from google.cloud import storage
 from DataLoader import DataLoader
 import os
 
-
 # Variables to list the relevant GCS files
 GCS_BUCKET = f"{os.getenv('GCS_BUCKET_TPCDI')}".lstrip('gs://')
 GCS_FOLDERS = 'staging/finwire'
@@ -27,11 +26,11 @@ dl = DataLoader()
 gcs_client = storage.Client()
 
 #def create_dataset():
-#    
+#
 #    bq_client.create_dataset(BIGQUERY_DATASET, exists_ok=True)
 #
 #def create_load_job(uri, table_id, schema):
-#	
+#
 #    job_config = bigquery.LoadJobConfig(
 #        schema=schema,
 #        source_format=bigquery.SourceFormat.CSV,
@@ -39,31 +38,31 @@ gcs_client = storage.Client()
 #        write_disposition=bigquery.job.WriteDisposition.WRITE_TRUNCATE
 #    )
 #
-#    load_job = bq_client.load_table_from_uri(uri, table_id, job_config=job_config) 
+#    load_job = bq_client.load_table_from_uri(uri, table_id, job_config=job_config)
 #    job_id = load_job.job_id
-#    load_job.result()  
-#    destination_table = bq_client.get_table(table_id)  
+#    load_job.result()
+#    destination_table = bq_client.get_table(table_id)
 #    print('Loaded {} rows'.format(destination_table.num_rows), 'with job_id', job_id)
-#    
+#
 #    return job_id
 #
 #
 #def load_table(dl.filename, table dataset,, schema):, origin
-#    
+#
 #    start_time = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc).isoformat()
 #    uri = 'gs://' + GCS_BUCKET + '/' + filename
 #    table_id = BIGQUERY_PROJECT + '.' + BIGQUERY_DATASET + '.' + table
 #    job_id = create_load_job(uri, table_id, schema)
 #    end_time = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc).isoformat()
-#    
+#
 #    lm = lineage.LineageManager(BIGQUERY_PROJECT_NUMBER, BIGQUERY_REGION, 'Data Download', 'load_finwire.csv', 'Data Download', start_time, end_time, TPCDI_URL, uri)
 #    lm.create_lineage()
-#    
+#
 #    #lm = lineage.LineageManager(BIGQUERY_PROJECT_NUMBER, BIGQUERY_REGION, 'Load Job', 'load_finwire.csv', job_id, start_time, end_time, uri, 'bigquery:' + table_id)
 #    #lm.create_lineage()
-#    
+#
 #    #lm.retrieve_lineage()
- 
+
 
 def load_sec_tables():
     blobs = gcs_client.list_blobs(GCS_BUCKET, prefix=GCS_FOLDERS)
@@ -95,7 +94,7 @@ def load_fin_tables():
     blobs = gcs_client.list_blobs(GCS_BUCKET, prefix=GCS_FOLDERS)
     for blob in blobs:
         if blob.name.endswith('_FIN.csv') == False:
-            continue    
+            continue
         filename = str(blob.name).split("/")[-1] # The blob include the full path, so get the filename
         print(f"filename: {filename}")
         dataset = 'finwire'
@@ -159,7 +158,6 @@ def load_finwire():
     load_sec_tables()
     load_fin_tables()
     load_cmp_tables()
-        
-        
+
 if __name__ == '__main__':
     load_finwire()

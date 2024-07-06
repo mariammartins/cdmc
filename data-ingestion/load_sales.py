@@ -16,9 +16,8 @@ from google.cloud import bigquery
 from DataLoader import DataLoader
 
 
-# Create a DataLoader object. 
+# Create a DataLoader object.
 dl = DataLoader()
- 
 
 def load_prospect():
     filename = 'Prospect*.csv'
@@ -51,7 +50,6 @@ def load_prospect():
             ]
     dl.load_table(filename, dataset, table, schema, origin)
 
-    
 if __name__ == '__main__':
     dl.delete_create_dataset('sales')
     load_prospect()

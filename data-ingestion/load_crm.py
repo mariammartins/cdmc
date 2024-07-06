@@ -16,7 +16,7 @@ from google.cloud import bigquery
 from DataLoader import DataLoader
 
 
-# Create a DataLoader object. 
+# Create a DataLoader object.
 dl = DataLoader()
 
 def load_crm_add_acct():

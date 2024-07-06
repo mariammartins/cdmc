@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-# This script creates a pythnon virtual environment installs the dependencies and 
+# This script creates a pythnon virtual environment installs the dependencies and
 # then runs the script to create the DLP inspection triggers to run daily.
 
 # Install virtual environment and activate
@@ -23,13 +22,5 @@ source .venvdlp/bin/activate
 # Install dependancies
 pip install -r requirements.txt
 
-
-# Schedule inspection 
+# Schedule inspection
 python3 inspect_datasets_schedule.py --scan_period_days 1
-
-
-
-
-  
-
-

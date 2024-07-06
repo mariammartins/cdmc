@@ -18,7 +18,7 @@ main:
      - check_if_done:
          switch:
             - condition: '${job_status.body.job_status != "SUCCESS" and job_status.body.tasks_completed > tasks_completed}'
-              next: wait_before_next_poll    
+              next: wait_before_next_poll
             - condition: '${job_status.body.job_status == "SUCCESS" or job_status.body.tasks_completed == tasks_completed}'
               return: ${job_status.body}
      - wait_before_next_poll:

@@ -127,5 +127,3 @@ class DataLoader():
                                      target=uri)
         lmd.create_lineage()
         lmd = None
-
-

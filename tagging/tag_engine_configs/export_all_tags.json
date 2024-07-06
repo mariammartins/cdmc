@@ -1,9 +1,9 @@
 {
-    "source_projects": ["PROJECT_ID_DATA"],
-	"source_region": "REGION",
-	"target_project": "PROJECT_ID_GOV",
+    "source_projects": ["cdmc-confdata-labs"],
+	"source_region": "us-central1",
+	"target_project": "cdmc-gov-labs",
 	"target_dataset": "tag_exports",
-	"target_region": "REGION",
+	"target_region": "us-central1",
 	"write_option": "truncate",
     "refresh_mode": "ON_DEMAND"
 }

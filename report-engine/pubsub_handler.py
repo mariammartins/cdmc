@@ -58,13 +58,13 @@ def publishPubSubAvro(project_id,topic_id,avsc_file, message):
 
 
 def publishPubSubAvroBatch(project_id,topic_id,avsc_file, max_messages,max_bytes, max_latency, messages):
-    
+
     batch_settings = pubsub_v1.types.BatchSettings(
-        max_messages=int(max_messages),  
-        max_bytes=int(max_bytes),  
-        max_latency=int(max_latency),  
+        max_messages=int(max_messages),
+        max_bytes=int(max_bytes),
+        max_latency=int(max_latency),
     )
-    
+
     publisher_client = PublisherClient(batch_settings)
     topic_path = publisher_client.topic_path(project_id, topic_id)
     publish_futures = []

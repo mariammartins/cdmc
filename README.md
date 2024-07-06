@@ -36,18 +36,19 @@ The CDMC architecture relies on a number of GCP component which need to be provi
 * *Optional*: create a GCP Folder:
 
         gcloud resource-manager folders create --display-name=CDMC-LABS
+        export CDMC_LABS_ID=63415298824
 
 ##### GCP Projects setup
 This guide relies on two projects being available:
 * A project to store the data, and run the controls against. For example `cdmc-confdata`.
 You can create the data project with this command:
 
-        gcloud projects create cdmc-confdata --folder [FOLDER_ID]
+        gcloud projects create cdmc-confdata-labs --folder $CDMC_LABS_ID
 
 * A project to act as your data governance one. For example `cdmc-gov`.
 You can create the data governance project with this command:
 
-        gcloud projects create cdmc-gov --folder [FOLDER_ID]
+        gcloud projects create cdmc-gov-labs --folder $CDMC_LABS_ID
 
 ##### Infrastructure configuration
 The `setup.sh` script creates the necessary GCP components in the Data and Gov projects created above.

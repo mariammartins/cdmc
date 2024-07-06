@@ -20,31 +20,31 @@ import base64, requests, json, os
 SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 
 def process_request(request):
-        
+
     request_json = request.get_json()
     print('request_json:', request_json)
-    
+
     project_id = request_json['calls'][0][0].strip()
     print('project_id:', project_id)
-    
+
     project_num = request_json['calls'][0][1]
     print('project_num:', project_num)
-    
+
     region = request_json['calls'][0][2].strip()
     print('region:', region)
-    
+
     dataset = request_json['calls'][0][3].strip()
     print('dataset:', dataset)
-    
+
     table = request_json['calls'][0][4].strip()
     print('table:', table)
-    
+
     table = 'bigquery:' + project_id + '.' + dataset + '.' + table
     print('table: ', table)
-    
+
     ultimate_source = get_source_links(table, project_num, region)
     print('ultimate_source:', ultimate_source)
-    
+
     return json.dumps({"replies": [ultimate_source]})
 
 
@@ -55,9 +55,9 @@ def get_credentials_from_environment():
     credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
     auth_req = google.auth.transport.requests.Request()
     credentials.refresh(auth_req)
-     
+
     return credentials.token
-    
+
 
 def get_source_links(target, project_num, region):
 
@@ -77,4 +77,4 @@ def get_source_links(target, project_num, region):
                 print('Target:', target, '<- Source:', link['source']['fullyQualifiedName'])
                 return get_source_links(link['source']['fullyQualifiedName'], project_num, region)
     else:
-        return target         
+        return target

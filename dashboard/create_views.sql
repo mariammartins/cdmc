@@ -20,32 +20,32 @@
 
 create or replace view <your_cdmc_data_gov_project>.cdmc_report.last_run_data_assets as
 
-SELECT 
+SELECT
 SPLIT(asset_name,'.') [ORDINAL(1)] as project,
 SPLIT(asset_name,'.') [ORDINAL(2)] as dataset,
 SPLIT(asset_name,'.') [ORDINAL(3)] as table,
 sensitive
 
-FROM `<your_cdmc_data_gov_project>.cdmc_report.data_assets` 
+FROM `<your_cdmc_data_gov_project>.cdmc_report.data_assets`
 WHERE event_timestamp = (SELECT MAX(event_timestamp) FROM `<your_cdmc_data_gov_project>.cdmc_report.data_assets`);
 
 -- List all findings with control number, description and remediation recommendation
 
 create or replace view <your_cdmc_data_gov_project>.cdmc_report.last_run_findings_detail as
 
-SELECT 
+SELECT
   SUBSTR(DataAsset, (STRPOS(DataAsset, '/projects/') + 10), STRPOS(DataAsset, '/datasets/') - STRPOS(DataAsset, '/projects/') - 10) as Project_Name,
   SUBSTR(DataAsset, (STRPOS(DataAsset, '/datasets/') + 10), STRPOS(DataAsset, '/tables/') - STRPOS(DataAsset, '/datasets/') - 10) as Dataset_Name,
-  SUBSTR(DataAsset, (STRPOS(DataAsset, '/tables/') + 8), LENGTH(DataAsset) - STRPOS(DataAsset, '/tables/') - 7) as Table_Name,  
+  SUBSTR(DataAsset, (STRPOS(DataAsset, '/tables/') + 8), LENGTH(DataAsset) - STRPOS(DataAsset, '/tables/') - 7) as Table_Name,
   CdmcControlNumber as Control_Number,
   Findings as Finding_Description,
   RecommendedAdjustment as Recommended_Adjustment
-FROM 
-  `<your_cdmc_data_gov_project>.cdmc_report.events` 
-where 
-  CdmcControlNumber>0 
+FROM
+  `<your_cdmc_data_gov_project>.cdmc_report.events`
+where
+  CdmcControlNumber>0
   AND reportMetadata.uuid=(SELECT reportMetadata.uuid FROM `<your_cdmc_data_gov_project>.cdmc_report.events` order by ExecutionTimestamp desc limit 1);
-  
+
 
 -- Summary table with row per table and column per control with count of findings based on assets scanned
 
@@ -54,7 +54,7 @@ create or replace view <your_cdmc_data_gov_project>.cdmc_report.last_run_finding
 SELECT
   SUBSTR(DataAsset, (STRPOS(DataAsset, '/projects/') + 10), STRPOS(DataAsset, '/datasets/') - STRPOS(DataAsset, '/projects/') - 10) as Project_Name,
   SUBSTR(DataAsset, (STRPOS(DataAsset, '/datasets/') + 10), STRPOS(DataAsset, '/tables/') - STRPOS(DataAsset, '/datasets/') - 10) as Dataset_Name,
-  SUBSTR(DataAsset, (STRPOS(DataAsset, '/tables/') + 8), LENGTH(DataAsset) - STRPOS(DataAsset, '/tables/') - 7) as Table_Name,  
+  SUBSTR(DataAsset, (STRPOS(DataAsset, '/tables/') + 8), LENGTH(DataAsset) - STRPOS(DataAsset, '/tables/') - 7) as Table_Name,
   COUNTIF(CdmcControlNumber=1) as C01_Findings,
   COUNTIF(CdmcControlNumber=2) as C02_Findings,
   COUNTIF(CdmcControlNumber=3) as C03_Findings,
@@ -69,11 +69,11 @@ SELECT
   COUNTIF(CdmcControlNumber=12) as C12_Findings,
   COUNTIF(CdmcControlNumber=13) as C13_Findings,
   COUNTIF(CdmcControlNumber=14) as C14_Findings,
-   
-from 
-  `<your_cdmc_data_gov_project>.cdmc_report.events` 
-where 
-  reportMetadata.uuid=(SELECT reportMetadata.uuid FROM `<your_cdmc_data_gov_project>.cdmc_report.events` order by ExecutionTimestamp desc limit 1) 
+
+from
+  `<your_cdmc_data_gov_project>.cdmc_report.events`
+where
+  reportMetadata.uuid=(SELECT reportMetadata.uuid FROM `<your_cdmc_data_gov_project>.cdmc_report.events` order by ExecutionTimestamp desc limit 1)
   # and DataAsset NOT LIKE ('%finwire%')
   and CdmcControlNumber > 0
 group by DataAsset
@@ -84,7 +84,7 @@ Order by DataAsset;
 
 create or replace view <your_cdmc_data_gov_project>.cdmc_report.last_run_findings_summary_alldata as
 
-SELECT 
+SELECT
   assets.project,
   assets.dataset,
   assets.table,
@@ -106,7 +106,7 @@ SELECT
   IF ((C01_Findings + C02_Findings + C03_Findings + C04_Findings + C05_Findings + C06_Findings + C07_Findings + C08_Findings + C09_Findings + C10_Findings + C11_Findings + C12_Findings + C13_Findings + C14_Findings) > 0, (C01_Findings + C02_Findings + C03_Findings + C04_Findings + C05_Findings + C06_Findings + C07_Findings + C08_Findings + C09_Findings + C10_Findings + C11_Findings + C12_Findings + C13_Findings + C14_Findings), 0) as Total_Findings
 FROM
   (SELECT project, dataset, table, sensitive FROM `<your_cdmc_data_gov_project>.cdmc_report.last_run_data_assets`) as assets
-FULL JOIN 
+FULL JOIN
   `<your_cdmc_data_gov_project>.cdmc_report.last_run_findings_summary` as findings
 ON
   assets.project = findings.Project_Name AND assets.dataset = findings.Dataset_Name AND assets.table = findings.Table_Name
@@ -116,31 +116,31 @@ ORDER BY project, dataset, table ASC;
 
 create or replace view  <your_cdmc_data_gov_project>.cdmc_report.last_run_dataset_stats as
 
-SELECT project, dataset, 
-  COUNT(table) as num_tables, 
+SELECT project, dataset,
+  COUNT(table) as num_tables,
   COUNTIF(Total_Findings > 0) as num_tables_with_findings,
   COUNTIF(sensitive = true) as num_sensitive_tables,
   ROUND(COUNTIF(Total_Findings > 0) / COUNT(table), 2) as percentage_with_findings
-FROM `<your_cdmc_data_gov_project>.cdmc_report.last_run_findings_summary_alldata` 
+FROM `<your_cdmc_data_gov_project>.cdmc_report.last_run_findings_summary_alldata`
 GROUP BY project, dataset;
 
 -- Details of last report engine run including timestamp, UUID and controls in scope
 
 create or replace view <your_cdmc_data_gov_project>.cdmc_report.last_run_metadata as
 
-SELECT 
-  reportMetadata.uuid as UUID, 
-  ExecutionTimestamp, 
+SELECT
+  reportMetadata.uuid as UUID,
+  ExecutionTimestamp,
   reportMetadata.Controls as Controls_In_Scope
-FROM `<your_cdmc_data_gov_project>.cdmc_report.events` 
-order by ExecutionTimestamp desc 
+FROM `<your_cdmc_data_gov_project>.cdmc_report.events`
+order by ExecutionTimestamp desc
 limit 1;
 
 -- List the data quality metrics for both completeness and correctness on a per-column basis across all data assets
 
 create or replace view <your_cdmc_data_gov_project>.tag_exports.catalog_report_column_dq_report as
 
-SELECT 
+SELECT
 project, dataset, table, column,
 MAX (IF(tag_field = 'sensitive_field', tag_value, NULL)) as sensitive_field,
 MAX (IF(tag_field = 'sensitive_type', tag_value, NULL)) as sensitive_type,
@@ -159,7 +159,7 @@ MAX (IF(tag_template = 'correctness_template', IF(tag_field = 'acceptable_thresh
 MAX (IF(tag_template = 'correctness_template', IF(tag_field = 'meets_threshold', tag_value, NULL), NULL)) as correctness_meets_threshold,
 MAX (IF(tag_template = 'correctness_template', IF(tag_field = 'most_recent_run', tag_value, NULL), NULL)) as correctness_most_recent_run,
 
-FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_column_tags` 
+FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_column_tags`
 GROUP BY project, dataset, table, column;
 
 
@@ -167,13 +167,13 @@ GROUP BY project, dataset, table, column;
 
 create or replace view <your_cdmc_data_gov_project>.tag_exports.catalog_report_column_security_report as
 
-SELECT 
+SELECT
 project, dataset, table, column,
 MAX (IF(tag_field = 'sensitive_field', tag_value, NULL)) as sensitive_field,
 MAX (IF(tag_field = 'sensitive_type', tag_value, NULL)) as sensitive_type,
 MAX (IF(tag_field = 'platform_deid_method', tag_value, NULL)) as platform_deid_method
 
-FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_column_tags` 
+FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_column_tags`
 GROUP BY project, dataset, table, column;
 
 
@@ -181,7 +181,7 @@ GROUP BY project, dataset, table, column;
 
 create or replace view <your_cdmc_data_gov_project>.tag_exports.catalog_report_table_cdmc_controls_heatmap as
 
-SELECT 
+SELECT
 project,
 dataset,
 table,
@@ -208,8 +208,8 @@ GROUP BY project, dataset, table, tag_template;
 
 create or replace view <your_cdmc_data_gov_project>.tag_exports.catalog_report_table_cost_report as
 
-SELECT 
-project, dataset, table, 
+SELECT
+project, dataset, table,
 MAX (IF(tag_field = 'sensitive_category', tag_value, NULL)) as sensitive_category,
 FORMAT("%'d", CAST(MAX (IF(tag_field = 'total_query_bytes_billed', tag_value, NULL)) AS INT64)) as total_query_bytes_billed,
 FORMAT("%'d", CAST(MAX (IF(tag_field = 'total_storage_bytes_billed', tag_value, NULL)) AS INT64)) as total_storage_bytes_billed,
@@ -217,8 +217,8 @@ FORMAT("%'d", CAST(MAX (IF(tag_field = 'total_bytes_transferred', tag_value, NUL
 CONCAT('$',FORMAT("%.4f", CAST(MAX (IF(tag_field = 'estimated_query_cost', tag_value, NULL)) AS FLOAT64))) as estimated_query_cost,
 CONCAT('$',FORMAT("%.4f", CAST(MAX (IF(tag_field = 'estimated_storage_cost', tag_value, NULL)) AS FLOAT64))) as estimated_storage_cost,
 CONCAT('$',FORMAT("%.4f", CAST(MAX (IF(tag_field = 'estimated_egress_cost', tag_value, NULL)) AS FLOAT64))) as estimated_egress_cost,
-CONCAT('$',FORMAT("%.4f", CAST(MAX (IF(tag_field = 'estimated_query_cost', tag_value, NULL)) AS FLOAT64) 
-  + CAST(MAX (IF(tag_field = 'estimated_storage_cost', tag_value, NULL)) AS FLOAT64) 
+CONCAT('$',FORMAT("%.4f", CAST(MAX (IF(tag_field = 'estimated_query_cost', tag_value, NULL)) AS FLOAT64)
+  + CAST(MAX (IF(tag_field = 'estimated_storage_cost', tag_value, NULL)) AS FLOAT64)
   + CAST(MAX (IF(tag_field = 'estimated_egress_cost', tag_value, NULL)) AS FLOAT64))) as total_cost
 
 FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags`
@@ -229,11 +229,11 @@ GROUP BY project, dataset, table;
 
 create or replace view <your_cdmc_data_gov_project>.tag_exports.catalog_report_table_dq_report as
 
-SELECT project, dataset, table, 
+SELECT project, dataset, table,
 MAX (sensitive_type) as sensitive_type,
 MIN (completenes_meets_threshold) as dq_is_complete,
 MIN (correctness_meets_threshold) as dq_is_correct,
- FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_column_dq_report` 
+ FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_column_dq_report`
 where completenes_meets_threshold IS NOT NULL OR correctness_meets_threshold IS NOT NULL
 GROUP BY project, dataset, table
 ORDER BY project, dataset, table ASC;
@@ -243,38 +243,38 @@ ORDER BY project, dataset, table ASC;
 
 create or replace view <your_cdmc_data_gov_project>.tag_exports.catalog_report_table_ia_report as
 
-SELECT 
+SELECT
 proj_tags.project, proj_tags.dataset, proj_tags.table,
 
 ANY_VALUE (IF(proj_tags.tag_field = 'approved_storage_location', proj_tags.tag_value, NULL)) as approved_storage_location,
 ANY_VALUE (IF(proj_tags.tag_field = 'is_sensitive', proj_tags.tag_value, NULL)) as is_sensitive,
 ANY_VALUE (IF(proj_tags.tag_field = 'sensitive_category', proj_tags.tag_value, NULL)) as sensitive_category,
-(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags 
-  WHERE ia_tags.project=proj_tags.project 
+(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags
+  WHERE ia_tags.project=proj_tags.project
   AND ia_tags.dataset=proj_tags.dataset
   AND ia_tags.table=proj_tags.table
   AND ia_tags.tag_field='subject_locations'
   AND ia_tags.tag_template='impact_assessment') as subject_locations,
-(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags 
-  WHERE ia_tags.project=proj_tags.project 
+(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags
+  WHERE ia_tags.project=proj_tags.project
   AND ia_tags.dataset=proj_tags.dataset
   AND ia_tags.table=proj_tags.table
   AND ia_tags.tag_field='is_dpia'
   AND ia_tags.tag_template='impact_assessment') as is_dpia,
-(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags 
-  WHERE ia_tags.project=proj_tags.project 
+(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags
+  WHERE ia_tags.project=proj_tags.project
   AND ia_tags.dataset=proj_tags.dataset
   AND ia_tags.table=proj_tags.table
   AND ia_tags.tag_field='is_pia'
   AND ia_tags.tag_template='impact_assessment') as is_pia,
-(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags 
-  WHERE ia_tags.project=proj_tags.project 
+(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags
+  WHERE ia_tags.project=proj_tags.project
   AND ia_tags.dataset=proj_tags.dataset
   AND ia_tags.table=proj_tags.table
   AND ia_tags.tag_field='most_recent_assessment'
   AND ia_tags.tag_template='impact_assessment') as most_recent_assessment,
-(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags 
-  WHERE ia_tags.project=proj_tags.project 
+(SELECT ia_tags.tag_value FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` ia_tags
+  WHERE ia_tags.project=proj_tags.project
   AND ia_tags.dataset=proj_tags.dataset
   AND ia_tags.table=proj_tags.table
   AND ia_tags.tag_field='oldest_assessment'
@@ -289,13 +289,13 @@ GROUP BY project, dataset, table, tag_template;
 
 create or replace view <your_cdmc_data_gov_project>.tag_exports.catalog_report_table_retention_report as
 
-SELECT 
-project, dataset, table, 
+SELECT
+project, dataset, table,
 MAX (IF(tag_field = 'sensitive_category', tag_value, NULL)) as sensitive_category,
 MAX (IF(tag_field = 'retention_period', tag_value, NULL)) as retention_period,
 MAX (IF(tag_field = 'expiration_action', tag_value, NULL)) as expiration_action
 
-FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` 
+FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags`
 GROUP BY project, dataset, table;
 
 
@@ -303,13 +303,13 @@ GROUP BY project, dataset, table;
 
 create or replace view <your_cdmc_data_gov_project>.tag_exports.catalog_report_table_security_report as
 
-SELECT 
+SELECT
 project, dataset, table,
 ANY_VALUE (IF(tag_field = 'is_sensitive', tag_value, NULL)) as is_sensitive,
 ANY_VALUE (IF(tag_field = 'sensitive_category', tag_value, NULL)) as sensitive_category,
 ANY_VALUE (IF(tag_field = 'encryption_method', tag_value, NULL)) as encryption_method
 
-FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` 
+FROM `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags`
 where tag_template='cdmc_controls'
 GROUP BY project, dataset, table, tag_template;
 
@@ -321,7 +321,7 @@ select * from (
 SELECT
     cast(i.start_time as date) as job_date,
 	i.user_email AS user_id,
-    i.statement_type AS operation, 
+    i.statement_type AS operation,
     CONCAT(rf.project_id,'.',rf.dataset_id,'.',rf.table_id) as data_asset,
     l.key as key,
 	l.value as value
@@ -333,7 +333,7 @@ UNION ALL
 SELECT
     cast(i.start_time as date) as job_date,
 	i.user_email AS user_id,
-    i.statement_type AS operation, 
+    i.statement_type AS operation,
     CONCAT(rf.project_id,'.',rf.dataset_id,'.',rf.table_id) as data_asset,
     NULL as key,
 	NULL as value

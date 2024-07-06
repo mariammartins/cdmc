@@ -27,7 +27,7 @@ class Control12:
         self.avsc_file = avsc_file
         self.report_metadata = report_metadata
         self.config_file = config_file
-    
+
     def generateReportSensitive(self):
 
         config = configparser.ConfigParser()
@@ -62,10 +62,10 @@ class Control12:
         for result_assets in results:
             for template in str(config["QUALITY_TEMPLATE"]["dimensions"]).split(","):
                 column_sensitive_dict = getColumnTagDict(result_assets.relative_resource_name, str(config["TAGS"]["Control12_sensitivity"]), str(config["TAGS"]["Control12_sensitivity_display"]),"boolValue")
-                column_quality_dict = getColumnTagDict(result_assets.relative_resource_name, str(config["QUALITY_TEMPLATE"]["threshold_field"]), str(config["TAGS"]["Control12_display"]),"boolValue")                
+                column_quality_dict = getColumnTagDict(result_assets.relative_resource_name, str(config["QUALITY_TEMPLATE"]["threshold_field"]), str(config["TAGS"]["Control12_display"]),"boolValue")
                 for key in column_sensitive_dict:
                     # IF COLUMN IS SENSITIVE AND DOES NOT HAVE A QUALITY IN COLUMN
-                    if(key not in column_quality_dict and column_sensitive_dict[key]):                        
+                    if(key not in column_quality_dict and column_sensitive_dict[key]):
                         message = {
                             "reportMetadata":self.report_metadata,
                             "CdmcControlNumber":12,
@@ -76,7 +76,7 @@ class Control12:
                         }
                         print("|---- Finding 12_missing_column_quality_" + template +" in asset:" + result_assets.linked_resource)
                         publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)
-                    else: 
+                    else:
                         #IF COLUMN IS SENSITIVE, HAVE COLUMN AND QUALITY THRESHOLD IS FALSE
                         if(not column_quality_dict[key]):
                             message = {
@@ -89,10 +89,10 @@ class Control12:
                             }
                             print("|---- Finding 12_threshold_" + template +" in asset:" + result_assets.linked_resource)
                             publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)
-                    
-                for key in column_quality_dict:    
+
+                for key in column_quality_dict:
                     #DATA ASSET IS SENSITIVE, COLUMN IS NOT SENSITIVE AND DOES NOT MEETS THRESHOLD
-                    if(key not in column_sensitive_dict and not column_quality_dict[key]):                        
+                    if(key not in column_sensitive_dict and not column_quality_dict[key]):
                         message = {
                             "reportMetadata":self.report_metadata,
                             "CdmcControlNumber":12,
@@ -102,7 +102,7 @@ class Control12:
                             "ExecutionTimestamp":str(time.time())
                         }
                         print("|---- Finding 12_nonsensitivecolumn_threshold" + template +" in asset:" + result_assets.linked_resource)
-                        publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)                    
+                        publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)
 
     def generateReportNonSensitive(self):
 
@@ -118,7 +118,7 @@ class Control12:
         results = searchCatalogAssets(self.org_id,self.project_id, search_string)
         for result_assets in results:
             for template in str(config["QUALITY_TEMPLATE"]["dimensions"]).split(","):
-                column_quality_dict = getColumnTagDict(result_assets.relative_resource_name, str(config["QUALITY_TEMPLATE"]["threshold_field"]), str(config["TAGS"]["Control12_display"]),"boolValue")                
+                column_quality_dict = getColumnTagDict(result_assets.relative_resource_name, str(config["QUALITY_TEMPLATE"]["threshold_field"]), str(config["TAGS"]["Control12_display"]),"boolValue")
                 for key in column_quality_dict:
                     # IF COLUMN HAS QUALITY IN COLUMN WITH THRESHOLD = FALSE
                     if(not column_quality_dict[key]):
@@ -131,4 +131,4 @@ class Control12:
                             "ExecutionTimestamp":str(time.time())
                         }
                         print("|---- Finding 12_nonsensitive_threshold in asset no sensitive:" + result_assets.linked_resource)
-                        publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)           
+                        publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)

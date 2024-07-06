@@ -16,9 +16,9 @@ from google.cloud import bigquery
 from DataLoader import DataLoader
 
 
-# Create a DataLoader object. 
+# Create a DataLoader object.
 dl = DataLoader()
- 
+
 
 def load_date():
     filename = 'Date.txt'
@@ -43,7 +43,7 @@ def load_date():
                 bigquery.SchemaField('FiscalYearDesc', 'STRING'),
                 bigquery.SchemaField('FiscalQtrID', 'INTEGER'),
                 bigquery.SchemaField('FiscalQtrDesc', 'STRING'),
-                bigquery.SchemaField('HolidayFlag', 'BOOLEAN'), 
+                bigquery.SchemaField('HolidayFlag', 'BOOLEAN'),
             ]
     dl.load_table(filename, dataset, table, schema, origin, field_delimiter='|')
 
@@ -105,7 +105,7 @@ def load_time():
             ]
     dl.load_table(filename, dataset, table, schema, origin, field_delimiter='|')
 
-    
+
 if __name__ == '__main__':
     dl.delete_create_dataset('reference')
     load_date()

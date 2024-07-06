@@ -30,14 +30,14 @@ def get_credentials(audience = "https://datalineage.googleapis.com"):
     r.raise_for_status()
     access_token = r.json()['access_token']
     return access_token
-         
+
 def isLineageSource(project_num, region, asset):
     url = '{0}/projects/{1}/locations/{2}:searchLinks'.format(DL_API, project_num, region)
     headers = {'Authorization' : 'Bearer ' + get_credentials()}
     payload = payload = {'source': {'fully_qualified_name': asset, 'location': region}}
 
     res = requests.post(url, headers=headers, data=json.dumps(payload)).json()
-    
+
     if 'links' in res:
         links = res['links']
         return True

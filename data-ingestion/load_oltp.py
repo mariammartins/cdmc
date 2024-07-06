@@ -17,9 +17,9 @@ from google.cloud import bigquery
 from DataLoader import DataLoader
 
 
-# Create a DataLoader object. 
+# Create a DataLoader object.
 dl = DataLoader()
- 
+
 
 def load_account():
     filename = 'Account*.txt'
@@ -123,7 +123,7 @@ def load_daily_market_historical():
                 bigquery.SchemaField('dm_close', 'NUMERIC'),
                 bigquery.SchemaField('dm_high', 'NUMERIC'),
                 bigquery.SchemaField('dm_low', 'NUMERIC'),
-                bigquery.SchemaField('dm_vol', 'INTEGER'),               
+                bigquery.SchemaField('dm_vol', 'INTEGER'),
             ]
     dl.load_table(filename, dataset, table, schema, origin, field_delimiter='|')
 
@@ -141,7 +141,7 @@ def load_daily_market_incremental():
                 bigquery.SchemaField('dm_close', 'NUMERIC'),
                 bigquery.SchemaField('dm_high', 'NUMERIC'),
                 bigquery.SchemaField('dm_low', 'NUMERIC'),
-                bigquery.SchemaField('dm_vol', 'INTEGER'),               
+                bigquery.SchemaField('dm_vol', 'INTEGER'),
             ]
     dl.load_table(filename, dataset, table, schema, origin, field_delimiter='|')
 
@@ -155,7 +155,7 @@ def load_holding_history_historical():
                 bigquery.SchemaField('hh_h_t_id', 'INTEGER'),
                 bigquery.SchemaField('hh_t_id', 'INTEGER'),
                 bigquery.SchemaField('hh_before_qty', 'INTEGER'),
-                bigquery.SchemaField('hh_after_qty', 'INTEGER'),               
+                bigquery.SchemaField('hh_after_qty', 'INTEGER'),
             ]
     dl.load_table(filename, dataset, table, schema, origin, field_delimiter='|')
 
@@ -171,7 +171,7 @@ def load_holding_history_incremental():
                 bigquery.SchemaField('hh_h_t_id', 'INTEGER'),
                 bigquery.SchemaField('hh_t_id', 'INTEGER'),
                 bigquery.SchemaField('hh_before_qty', 'INTEGER'),
-                bigquery.SchemaField('hh_after_qty', 'INTEGER'),               
+                bigquery.SchemaField('hh_after_qty', 'INTEGER'),
             ]
     dl.load_table(filename, dataset, table, schema, origin, field_delimiter='|')
 
@@ -234,7 +234,7 @@ def load_trade_history():
     schema = [
                 bigquery.SchemaField('th_t_id', 'INTEGER'),
                 bigquery.SchemaField('th_dts', 'DATETIME'),
-                bigquery.SchemaField('th_st_id', 'STRING'),               
+                bigquery.SchemaField('th_st_id', 'STRING'),
             ]
     dl.load_table(filename, dataset, table, schema, origin, field_delimiter='|')
 
@@ -247,8 +247,8 @@ def load_watch_history_historical():
     schema = [
                 bigquery.SchemaField('w_c_id', 'INTEGER'),
                 bigquery.SchemaField('w_s_symb', 'STRING'),
-                bigquery.SchemaField('w_dts', 'DATETIME'), 
-                bigquery.SchemaField('w_action', 'STRING'),              
+                bigquery.SchemaField('w_dts', 'DATETIME'),
+                bigquery.SchemaField('w_action', 'STRING'),
             ]
     dl.load_table(filename, dataset, table, schema, origin, field_delimiter='|')
 
@@ -283,4 +283,3 @@ if __name__ == '__main__':
     load_trade_history()
     load_watch_history_historical()
     load_watch_history_incremental()
-  

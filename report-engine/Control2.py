@@ -26,7 +26,7 @@ class Control2:
         self.avsc_file = avsc_file
         self.report_metadata = report_metadata
         self.config_file = config_file
-    
+
 
     def generateReport(self):
 

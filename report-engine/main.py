@@ -43,11 +43,11 @@ def generate():
     else: return Response ("topic parameter not set", status=400)
 
     if(request.args.get('projectNumber')): projectNumber = request.args.get('projectNumber')
-    else: 
+    else:
         if(request.args.get('controls').find("14")>-1):return Response ("projectNumber parameter not set for Control 14", status=400)
         else: projectNumber = ""
 
-    if(request.args.get('assetsScope')): 
+    if(request.args.get('assetsScope')):
         if request.args.get('assetsScope').upper()=="FALSE": assetsScope= False
         else: assetsScope = True
     else: assetsScope = True
@@ -65,8 +65,8 @@ def generate():
                      "organization_id": orgId,
                      "project_id":projectId,
                      "controls": controls,
-                     "result_project":topicProjectId, 
-                     "result_topic":topic}, 
+                     "result_project":topicProjectId,
+                     "result_topic":topic},
                      status=200)
 
 

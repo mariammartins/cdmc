@@ -46,7 +46,7 @@ trigger_job_flow:
      - check_if_done:
          switch:
             - condition: '${job_status.body.job_status == "PENDING" or job_status.body.job_status == "RUNNING"}'
-              next: wait_before_next_poll    
+              next: wait_before_next_poll
             - condition: '${job_status.body.job_status == "SUCCESS" or job_status.body.job_status == "ERROR"}'
               return: ${job_status.body}
      - wait_before_next_poll:

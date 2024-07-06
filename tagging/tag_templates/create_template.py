@@ -21,7 +21,7 @@ from google.cloud.datacatalog import DataCatalogClient
 
 """
 Args:
-    project_id: The Google Cloud project id to use 
+    project_id: The Google Cloud project id to use
     region: The Google Cloud region in which to create the Tag Template
     yaml_file: path to the yaml file containing the template specification
 Returns:
@@ -29,18 +29,18 @@ Returns:
 """
 
 def create_template(project_id, region, yaml_file):
-    
+
     dc_client = DataCatalogClient()
     tag_template = datacatalog.TagTemplate()
-    
+
     with open(yaml_file) as file:
         file_contents = yaml.full_load(file)
         template_contents = file_contents.get("template")[0]
 
         for k, v in template_contents.items():
             print(k + "->" + str(v))
-    
-            if k == 'name': 
+
+            if k == 'name':
                 tag_template_id = v
             if k == 'display_name':
                 tag_template.display_name = v
@@ -48,23 +48,23 @@ def create_template(project_id, region, yaml_file):
                 tag_template.is_publicly_readable = v
             if k == 'fields':
                 fields = v
-                
+
                 for field in fields:
-                    
+
                     field_id = None
                     datatype = None
                     enum_values = None
                     display_name = None
                     description = None
                     required = False
-                    
+
                     for fname, fval in field.items():
-                        
+
                         if fname == "values":
                             fval = fval.replace(' ', '_')
-                            
+
                         print(fname + "->" + str(fval))
-                    
+
                         if fname == "field":
                             field_id = fval
                         if fname == "type":
@@ -79,103 +79,103 @@ def create_template(project_id, region, yaml_file):
                             required = fval
                         if fname == "order":
                             order = fval
-                   
+
                     if datatype.lower() == "enum":
-                        
+
                         field = datacatalog.TagTemplateField()
                         enum_list = enum_values.split("|")
-                        
+
                         for value in enum_list:
                             enum_value = datacatalog.FieldType.EnumType.EnumValue()
                             enum_value.display_name = value
                             field.type_.enum_type.allowed_values.append(enum_value)
-                            
+
                             field.display_name = display
                             field.is_required = required
-                            
+
                             if description:
                                 field.description = description
-                                
+
                             field.order = order
                             tag_template.fields[field_id] = field
-                            
+
                     elif datatype.lower() == "bool":
-                        
+
                         field = datacatalog.TagTemplateField()
                         field.type_.primitive_type = datacatalog.FieldType.PrimitiveType.BOOL
                         field.display_name = display
                         field.is_required = required
-                        
+
                         if description:
                             field.description = description
-                        
+
                         field.order = order
                         tag_template.fields[field_id] = field
-                    
+
                     elif datatype.lower() == "string":
-                        
+
                         field = datacatalog.TagTemplateField()
                         field.type_.primitive_type = datacatalog.FieldType.PrimitiveType.STRING
                         field.display_name = display
                         field.is_required = required
-                        
+
                         if description:
                             field.description = description
-                        
+
                         field.order = order
                         tag_template.fields[field_id] = field
-                    
+
                     elif datatype.lower() == "double":
-                        
+
                         field = datacatalog.TagTemplateField()
                         field.type_.primitive_type = datacatalog.FieldType.PrimitiveType.DOUBLE
                         field.display_name = display
                         field.is_required = required
-                        
+
                         if description:
                             field.description = description
-                        
+
                         field.order = order
                         tag_template.fields[field_id] = field
-                    
+
                     elif datatype.lower() in ("timestamp", "datetime"):
-                        
+
                         field = datacatalog.TagTemplateField()
                         field.type_.primitive_type = datacatalog.FieldType.PrimitiveType.TIMESTAMP
                         field.display_name = display
                         field.is_required = required
-                        
+
                         if description:
                             field.description = description
                         field.order = order
-                        
+
                         tag_template.fields[field_id] = field
-                    
+
                     elif datatype.lower() == "richtext":
-                        
+
                         field = datacatalog.TagTemplateField()
                         field.type_.primitive_type = datacatalog.FieldType.PrimitiveType.RICHTEXT
                         field.display_name = display
                         field.is_required = required
-                        
+
                         if description:
                             field.description = description
                         field.order = order
-                        
+
                         tag_template.fields[field_id] = field
-                    
-        created_tag_template = dc_client.create_tag_template(parent=f'projects/{project_id}/locations/{region}', tag_template_id=tag_template_id, tag_template=tag_template)               
-                        
+
+        created_tag_template = dc_client.create_tag_template(parent=f'projects/{project_id}/locations/{region}', tag_template_id=tag_template_id, tag_template=tag_template)
+
         return created_tag_template
-                        
-                        
-                        
+
+
+
 if __name__ == '__main__':
-    
+
     parser = argparse.ArgumentParser(description="creates a Data Catalog Tag Template based on a yaml file specification.")
     parser.add_argument('project_id', help='Your Google Cloud Project ID.')
     parser.add_argument('region', help='The Google Cloud region in which to create the Tag Template.')
     parser.add_argument('yaml_file', help='Path to your yaml file containing the template specification.')
     args = parser.parse_args()
     create_template(args.project_id, args.region, args.yaml_file)
-   
+

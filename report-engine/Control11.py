@@ -27,7 +27,7 @@ class Control11:
         self.avsc_file = avsc_file
         self.report_metadata = report_metadata
         self.config_file = config_file
-    
+
     def generateReport(self):
         config = configparser.ConfigParser()
         config.read(self.config_file)
@@ -36,7 +36,7 @@ class Control11:
         bq_rp = queryTable(str(config["SQL"]["project_id_11"]),
                                   str(config["SQL"]["dataset_11"]),
                                   str(config["SQL"]["sql_file_11"]))
-        
+
         for row in bq_rp:
             dc_search_string_action = (str(config["DC_FILTERS"]["Control11_1"])
                                 .replace("$location",row["geographical_region"])
@@ -56,7 +56,7 @@ class Control11:
                 }
                 print("|---- Finding in asset:" + result.linked_resource)
                 publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message_action)
-            
+
             dc_search_string_period = (str(config["DC_FILTERS"]["Control11_2"])
                                 .replace("$location",row["geographical_region"])
                                 .replace("$sensitive_category",row["sensitive_category"])
@@ -75,6 +75,5 @@ class Control11:
                         "ExecutionTimestamp":str(time.time())
                 }
                 print("|---- Finding in asset:" + result.linked_resource)
-                publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message_period)            
+                publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message_period)
 
-            

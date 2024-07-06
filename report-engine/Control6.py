@@ -26,7 +26,7 @@ class Control6:
         self.avsc_file = avsc_file
         self.report_metadata = report_metadata
         self.config_file = config_file
-    
+
 
     def generateReport(self):
         config = configparser.ConfigParser()
@@ -45,14 +45,14 @@ class Control6:
             }
             print("|---- Finding in asset:" + result.linked_resource)
             publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)
-        
+
         results = searchCatalogAssets(self.org_id,self.project_id, str(config["DC_FILTERS"]["Control6_2"]))
         for result_assets in results:
             column_sensitive_dict = getColumnTagDict(result_assets.relative_resource_name, str(config["TAGS"]["Control6_sensitivity"]), str(config["TAGS"]["Control6_sensitivity_display"]),"boolValue")
             column_sensitive_category_dict = getColumnTagDict(result_assets.relative_resource_name, str(config["TAGS"]["Control6_sensitivy_category"]), str(config["TAGS"]["Control6_sensitivy_category_display"]),"enumValue")
             for key in column_sensitive_dict:
                 # IF COLUMN IS SENSITIVE AND DOES NOT HAVE A CATEGORY IN COLUMN
-                if(key not in column_sensitive_category_dict and column_sensitive_dict[key]):                        
+                if(key not in column_sensitive_category_dict and column_sensitive_dict[key]):
                     message = {
                         "reportMetadata":self.report_metadata,
                         "CdmcControlNumber":6,

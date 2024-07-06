@@ -6,35 +6,35 @@ main:
           args:
             oauth_token: ${args.oauth_token}
             config_type: "DYNAMIC_TAG_COLUMN"
-            config_uuid: "365f07feec2411ed92b79bd64615ec44"
+            config_uuid: "7a1546f83b0a11ef95ad42004e494300"
           result: security_policy_crm_status
       - security_policy_hr:
           call: trigger_job_flow
           args:
             oauth_token: ${args.oauth_token}
             config_type: "DYNAMIC_TAG_COLUMN"
-            config_uuid: "096fc7f0ec2511eda40051c428bb776e"
+            config_uuid: "81d75f0c3b0a11ef95ad42004e494300"
           result: security_policy_hr_status
       - security_policy_oltp:
           call: trigger_job_flow
           args:
             oauth_token: ${args.oauth_token}
             config_type: "DYNAMIC_TAG_COLUMN"
-            config_uuid: "c5f52e52ec2911eda736e55a872784bf"
+            config_uuid: "8a4d70723b0a11ef95ad42004e494300"
           result: security_policy_oltp_status
       - security_policy_sales:
           call: trigger_job_flow
           args:
             oauth_token: ${args.oauth_token}
             config_type: "DYNAMIC_TAG_COLUMN"
-            config_uuid: "fba9bcf2ec2911edbd5ee55a872784bf"
+            config_uuid: "9617b93a3b0a11ef9b6c42004e494300"
           result: security_policy_sales_status
       - security_policy_finwire:
           call: trigger_job_flow
           args:
             oauth_token: ${args.oauth_token}
             config_type: "DYNAMIC_TAG_COLUMN"
-            config_uuid: "33111500ec2a11edbd5ee55a872784bf"
+            config_uuid: "9d94390e3b0a11ef95ad42004e494300"
           result: security_policy_finwire_status
       - return_message:
           return: "done"
@@ -74,7 +74,7 @@ trigger_job_flow:
      - check_if_done:
          switch:
             - condition: '${job_status.body.job_status == "PENDING" or job_status.body.job_status == "RUNNING"}'
-              next: wait_before_next_poll    
+              next: wait_before_next_poll
             - condition: '${job_status.body.job_status == "SUCCESS" or job_status.body.job_status == "ERROR"}'
               return: ${job_status.body}
      - wait_before_next_poll:

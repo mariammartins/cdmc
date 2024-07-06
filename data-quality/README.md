@@ -22,6 +22,7 @@ For convenience, we have provided a deployment script which performes the follow
     * *dataset* used to store the DQ results
 
 You can deploy by executing the following script:
+
 ```
 . ./deploy_cdmc-dq.sh
 ```
@@ -38,14 +39,17 @@ The Cloud-DQ binaries requires a specific OS version and Python version, so if y
 execute locally it is best to do that within a container.
 
 To build the container locally:
+
 ```
 docker build -t cloud-dq .
 ```
 
 To execute the container locally:
+
 ```
 docker run -v $HOME/.config/gcloud:/root/.config/gcloud cloud-dq $PROJECT_ID_DATA $PROJECT_ID_GOV $REGION $CLOUDDQ_BIGQUERY_DATASET
 ```
+
 Note how we map the folder with the ADC token to the container to provide access, and pass the
 parameters which are eventually propagated to the `run_dq_engine.sh`
 

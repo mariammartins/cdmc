@@ -30,7 +30,7 @@ main:
      - check_if_done:
          switch:
             - condition: '${job_status.body.job_status == "PENDING" or job_status.body.job_status == "RUNNING"}'
-              next: wait    
+              next: wait
             - condition: '${job_status.body.job_status == "SUCCESS"}'
               return: ${job_status}
      - wait:

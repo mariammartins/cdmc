@@ -31,7 +31,7 @@ gcloud iam service-accounts create cdmc-reportengine \
 gcloud projects add-iam-policy-binding $BIGQUERY_PROJECT \
 	--member=serviceAccount:$REPORTENGINE_SA \
 	--role=roles/bigquery.dataEditor
-	
+
 gcloud projects add-iam-policy-binding $BIGQUERY_PROJECT \
 	--member=serviceAccount:$REPORTENGINE_SA \
 	--role=roles/bigquery.jobUser
@@ -64,4 +64,4 @@ gcloud run deploy cdmc-reportengine \
 export ENDPOINT="$(gcloud run services describe cdmc-reportengine --region $REGION --format='value(status.url)')"
 
 # Grant access to the authenticated user
-gcloud run services add-iam-policy-binding cdmc-reportengine --member=user:$AUTHENTICATED_USER --role=roles/run.invoker 
+gcloud run services add-iam-policy-binding cdmc-reportengine --member=user:$AUTHENTICATED_USER --role=roles/run.invoker

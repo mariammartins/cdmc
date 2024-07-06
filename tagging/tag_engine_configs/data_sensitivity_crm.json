@@ -1,7 +1,7 @@
 {
     "template_id": "data_sensitivity",
-    "template_project": "PROJECT_ID_GOV",
-    "template_region": "REGION",
+    "template_project": "cdmc-gov-labs",
+    "template_region": "us-central1",
     "fields": [
         {
             "field_id": "sensitive_field"
@@ -10,12 +10,12 @@
             "field_id": "sensitive_type"
         }
     ],
-    "dlp_dataset": "bigquery/project/PROJECT_ID_GOV/dataset/crm_dlp",
-	"infotype_selection_table": "bigquery/project/PROJECT_ID_GOV/dataset/data_classification/infotype_selection",
-	"infotype_classification_table": "bigquery/project/PROJECT_ID_GOV/dataset/data_classification/infotype_classification",
-	"included_tables_uris": "bigquery/project/PROJECT_ID_DATA/dataset/crm/*",
+    "dlp_dataset": "bigquery/project/cdmc-gov-labs/dataset/crm_dlp",
+	"infotype_selection_table": "bigquery/project/cdmc-gov-labs/dataset/data_classification/infotype_selection",
+	"infotype_classification_table": "bigquery/project/cdmc-gov-labs/dataset/data_classification/infotype_classification",
+	"included_tables_uris": "bigquery/project/cdmc-confdata-labs/dataset/crm/*",
     "create_policy_tags": true,
-    "taxonomy_id": "projects/PROJECT_ID_GOV/locations/REGION/taxonomies/730755508715999596",
+    "taxonomy_id": "projects/cdmc-gov-labs/locations/us-central1/taxonomies/1658174693207228167",
     "refresh_mode": "ON_DEMAND",
     "tag_history": true,
     "tag_stream": false

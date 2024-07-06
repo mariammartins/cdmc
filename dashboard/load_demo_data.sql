@@ -46,23 +46,23 @@ CREATE SCHEMA `<your_cdmc_data_gov_project>.tag_exports`
     );
 
 CREATE TABLE `<your_cdmc_data_gov_project>.tag_exports.catalog_report_column_tags` (
- project STRING, 
- dataset STRING, 
- table STRING, 
+ project STRING,
+ dataset STRING,
+ table STRING,
  column STRING,
  tag_template STRING,
- tag_field STRING, 
- tag_value STRING, 
+ tag_field STRING,
+ tag_value STRING,
  export_time TIMESTAMP
 );
 
 CREATE TABLE `<your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tags` (
- project STRING, 
- dataset STRING, 
- table STRING, 
+ project STRING,
+ dataset STRING,
+ table STRING,
  tag_template STRING,
- tag_field STRING, 
- tag_value STRING, 
+ tag_field STRING,
+ tag_value STRING,
  export_time TIMESTAMP
 );
 
@@ -71,7 +71,7 @@ LOAD DATA INTO <your_cdmc_data_gov_project>.cdmc_report.data_assets
     format='AVRO',
     uris = ['gs://<your_cdmc_demo_data_bucket>/cdmc_report_data_assets_demo.avro']
   );
-  
+
 LOAD DATA INTO <your_cdmc_data_gov_project>.cdmc_report.events
   FROM FILES(
     format='AVRO',
@@ -88,4 +88,4 @@ LOAD DATA INTO <your_cdmc_data_gov_project>.tag_exports.catalog_report_table_tag
   FROM FILES(
     format='AVRO',
     uris = ['gs://<your_cdmc_demo_data_bucket>/tag_exports_catalog_report_table_tags_demo.avro']
-  );  
+  );

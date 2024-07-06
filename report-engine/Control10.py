@@ -27,7 +27,7 @@ class Control10:
         self.avsc_file = avsc_file
         self.report_metadata = report_metadata
         self.config_file = config_file
-    
+
 
     def generateReport(self):
 
@@ -82,7 +82,7 @@ class Control10:
                 }
                 print("|---- Finding in asset:" + result.linked_resource)
                 publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)
-        
+
         bq_iaca_rows = queryTable(str(config["SQL"]["project_id_10"]),
                                 str(config["SQL"]["dataset_10"]),
                                 str(config["SQL"]["sql_file_10_ca"]))

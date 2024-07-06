@@ -49,7 +49,7 @@ class Control14:
             }
             print("|---- Finding in asset:" + result.linked_resource)
             publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)
-        
+
         #Sensitive + Lineage API
         results_sensitive = searchCatalogAssets(self.org_id,self.project_id,str(config["DC_FILTERS"]["Control14_api"]))
         for result in results_sensitive:

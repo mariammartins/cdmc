@@ -109,6 +109,3 @@ In case the deployment occurs in a deployment of [Secure Data Warehouse](https:/
 - Create an Access Level, or update potential existing one, enabling the "sa-report-engine@" service account to access the data confidential project.
 
 In case of Cloud Run deployment, potential Access Level modifications can be necessary, allowing deployments components, such as Cloud Build default Service Account or Pub/Sub default Service Account to BigQuery. This configurations change might be analyzed according to VPC-SC topology and definitions.
-
-
-

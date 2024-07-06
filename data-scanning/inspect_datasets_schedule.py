@@ -25,10 +25,10 @@ import requests
 
 region = os.getenv('REGION')
 inspect_project = os.getenv('PROJECT_ID_DATA')
-inspect_datasets = ['crm', 'hr', 'oltp','reference', 'sales']
+inspect_datasets = ['finwire']
 
 result_project = os.getenv('PROJECT_ID_GOV')
-result_datasets = ['crm_dlp','hr_dlp', 'oltp_dlp','reference_dlp', 'sales_dlp']
+result_datasets = ['finwire_dlp']
 
 bq_client = bigquery.Client(project=inspect_project)
 bq_client_results = bigquery.Client(project=result_project)

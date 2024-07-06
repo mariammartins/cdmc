@@ -6,35 +6,35 @@ main:
           args:
             oauth_token: ${args.oauth_token}
             config_type: "SENSITIVE_TAG_COLUMN"
-            config_uuid: "45394c58eaa811ed8b314fc3e703935d"
+            config_uuid: "39b015263b0911ef95ad42004e494300"
           result: sensitive_tag_crm_status
       - sensitive_tag_hr:
           call: trigger_job_flow
           args:
             oauth_token: ${args.oauth_token}
             config_type: "SENSITIVE_TAG_COLUMN"
-            config_uuid: "7406daa8eaaa11ed96bb691325c5401e"
+            config_uuid: "490ece9a3b0911ef95ad42004e494300"
           result: sensitive_tag_hr_status
       - sensitive_tag_oltp:
           call: trigger_job_flow
           args:
             oauth_token: ${args.oauth_token}
             config_type: "SENSITIVE_TAG_COLUMN"
-            config_uuid: "27b8aa4aeaab11ed95ce41aca72ee75f"
+            config_uuid: "963d39ae3b0911ef95ad42004e494300"
           result: sensitive_tag_oltp_status
       - sensitive_tag_sales:
           call: trigger_job_flow
           args:
             oauth_token: ${args.oauth_token}
             config_type: "SENSITIVE_TAG_COLUMN"
-            config_uuid: "60201a08eaab11ed8a22bb38d4c64047"
+            config_uuid: "5152e0323b0911ef95ad42004e494300"
           result: sensitive_tag_sales_status
       - sensitive_tag_finwire:
           call: trigger_job_flow
           args:
             oauth_token: ${args.oauth_token}
             config_type: "SENSITIVE_TAG_COLUMN"
-            config_uuid: "df0448eeeaab11ed8a22bb38d4c64047"
+            config_uuid: "6d34a6643b0911ef9b6c42004e494300"
           result: sensitive_tag_finwire_status
       - return_message:
           return: "done"
@@ -47,7 +47,7 @@ trigger_job_flow:
      - trigger_job:
          call: http.post
          args:
-           url: https://tag-engine-h5dcyzhzta-uc.a.run.app/trigger_job
+           url: https://tag-engine-api-5jkpn6bbgq-uc.a.run.app/trigger_job
            headers:
              oauth_token: ${oauth_token}
            auth:
@@ -63,7 +63,7 @@ trigger_job_flow:
      - get_job_status:
          call: http.post
          args:
-           url: https://tag-engine-h5dcyzhzta-uc.a.run.app/get_job_status
+           url: https://tag-engine-api-5jkpn6bbgq-uc.a.run.app/get_job_status
            headers:
              oauth_token: ${oauth_token}
            auth:
@@ -74,7 +74,7 @@ trigger_job_flow:
      - check_if_done:
          switch:
             - condition: '${job_status.body.job_status == "PENDING" or job_status.body.job_status == "RUNNING"}'
-              next: wait_before_next_poll    
+              next: wait_before_next_poll
             - condition: '${job_status.body.job_status == "SUCCESS" or job_status.body.job_status == "ERROR"}'
               return: ${job_status.body}
      - wait_before_next_poll:

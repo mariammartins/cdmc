@@ -54,14 +54,14 @@ def generateReport(orgId, projId, topicProjectId, topicname, report_metadata, pr
     print("|---- Sending finding control")
     publishPubSubAvro(topicProjectId,topic,avsc_file,message)
 
-    if assetsScope: 
+    if assetsScope:
         ac = AssetsScope(org_id, project_id,report_metadata,config_file)
         ac.publishAssets(execution_timestamp)
 
-    if controlNumber.find("02")>-1: 
+    if controlNumber.find("02")>-1:
         c2 = Control2(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
         c2.generateReport()
-    if controlNumber.find("03")>-1: 
+    if controlNumber.find("03")>-1:
         c3 = Control3(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
         c3.generateReport()
     if controlNumber.find("04")>-1:
@@ -79,24 +79,24 @@ def generateReport(orgId, projId, topicProjectId, topicname, report_metadata, pr
         c8.generateReport()
     if controlNumber.find("09")>-1:
         c9 = Control9(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
-        c9.generateReport()     
+        c9.generateReport()
     if controlNumber.find("10")>-1:
         c10 = Control10(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
-        c10.generateReport()      
+        c10.generateReport()
     if controlNumber.find("11")>-1:
         c11 = Control11(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
-        c11.generateReport()  
+        c11.generateReport()
     if controlNumber.find("12")>-1:
         c12 = Control12(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
-        c12.generateReportSensitive()  
-        c12.generateReportNonSensitive()       
+        c12.generateReportSensitive()
+        c12.generateReportNonSensitive()
     if controlNumber.find("13")>-1:
         c13 = Control13(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
-        c13.generateReport()        
+        c13.generateReport()
     if controlNumber.find("14")>-1:
         c14 = Control14(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file, 'us-central1',projectNumber)
-        c14.generateReport()            
-    if controlNumber=="all": 
+        c14.generateReport()
+    if controlNumber=="all":
         c2 = Control2(org_id,project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
         c2.generateReport()
         c3 = Control3(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
@@ -113,15 +113,15 @@ def generateReport(orgId, projId, topicProjectId, topicname, report_metadata, pr
         c9 = Control9(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
         c9.generateReport()
         c10 = Control10(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
-        c10.generateReport()  
+        c10.generateReport()
         c11 = Control11(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
         c11.generateReport()
         c12 = Control12(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
-        c12.generateReportSensitive()  
-        c12.generateReportNonSensitive()   
+        c12.generateReportSensitive()
+        c12.generateReportNonSensitive()
         c13 = Control13(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file)
-        c13.generateReport()         
+        c13.generateReport()
         c14 = Control14(org_id, project_id,topicProjectId, topic,avsc_file,report_metadata,config_file,'us', projectNumber)
-        c14.generateReport()  
+        c14.generateReport()
 
 

@@ -27,7 +27,7 @@ class Control8:
         self.avsc_file = avsc_file
         self.report_metadata = report_metadata
         self.config_file = config_file
-    
+
 
     def generateReport(self):
         config = configparser.ConfigParser()
@@ -43,7 +43,7 @@ class Control8:
         up_list = []
         for row in up_assets:
             up_list.append(row["data_asset_prefix"])
-        
+
         #UWC means user without case in control table - not registered
         up_assets_notcompliant_uwc = queryTable(str(config["SQL"]["project_id_82"]),
                                   str(config["SQL"]["dataset_82"]),
@@ -83,12 +83,12 @@ class Control8:
         up_list_nc_op = []
         for row in up_assets_notcompliant_op:
             up_list_nc_op.append(row["data_asset"])
-        
+
         for result in dc_results:
             found=0
-            for item in up_list:               
+            for item in up_list:
                 if item in extractTableId(result.linked_resource):
-                    found = 1                    
+                    found = 1
             if found <1:
                 message = {
                     "reportMetadata":self.report_metadata,
@@ -111,7 +111,7 @@ class Control8:
                         "ExecutionTimestamp":str(time.time())
                     }
                     print("|---- Finding in asset:" + result.linked_resource)
-                    publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)                
+                    publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)
                 if extractTableId(result.linked_resource) in up_list_nc_lv:
                     message = {
                         "reportMetadata":self.report_metadata,
@@ -135,7 +135,7 @@ class Control8:
                     }
                     print("|---- Finding in asset:" + result.linked_resource)
                     publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)
-    
+
                 if extractTableId(result.linked_resource) in up_list_nc_date:
                     message = {
                         "reportMetadata":self.report_metadata,
@@ -158,4 +158,4 @@ class Control8:
                         "ExecutionTimestamp":str(time.time())
                     }
                     print("|---- Finding in asset:" + result.linked_resource)
-                    publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)                    
+                    publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message)

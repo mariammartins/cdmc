@@ -6,7 +6,7 @@ main:
             parent: "projects/sdw-data-gov-b1927e-dd69/locations/us-central1/workflows/oauth-token"
         result: oauth_token
     - parse_token:
-        assign: 
+        assign:
             - formatted_token: ${text.substring(oauth_token.result, 2, 1025)}
     - data_sensitivity:
         call: googleapis.workflowexecutions.v1.projects.locations.workflows.executions.create

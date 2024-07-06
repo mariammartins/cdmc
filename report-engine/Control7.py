@@ -27,7 +27,7 @@ class Control7:
         self.avsc_file = avsc_file
         self.report_metadata = report_metadata
         self.config_file = config_file
-    
+
     def generateReport_1(self):
 
         config = configparser.ConfigParser()
@@ -54,7 +54,7 @@ class Control7:
 
         print("Verifying Control 7_2" )
 
-        
+
         results = searchCatalogAssets(self.org_id,self.project_id,str(config["DC_FILTERS"]["Control7_2"]))
         for result_assets in results:
             tag_dict = getColumnTagDict(result_assets.relative_resource_name, str(config["TAGS"]["Control7"]), str(config["TAGS"]["Control7_display"]),"enumValue")

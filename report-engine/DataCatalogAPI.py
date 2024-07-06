@@ -22,9 +22,9 @@ def getColumnTagDict(asset, tag_template_name,tag_display_name, data_type):
     response_tags = client.list_tags(request=tagrequest)
     for item in response_tags.tags:
         if(item.column):
-            tag_name = MessageToDict(item._pb)                  
+            tag_name = MessageToDict(item._pb)
             for field in tag_name["fields"]:
-                if(field == tag_template_name):                    
+                if(field == tag_template_name):
                     if data_type == "boolValue":
                         table_dict[item.column.upper()]=tag_name["fields"][tag_template_name][data_type]
                     else:

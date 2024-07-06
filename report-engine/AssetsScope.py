@@ -23,7 +23,7 @@ class AssetsScope:
         self.project_id = project_id
         self.report_metadata = report_metadata
         self.config_file = config_file
-    
+
 
     def publishAssets(self, execution_timestamp):
         config = configparser.ConfigParser()
@@ -36,7 +36,7 @@ class AssetsScope:
         dc_results = searchCatalogAssets(self.org_id,self.project_id, str(config["ASSETS_SCOPE"]["filter"]))
         for result in dc_results:
             sensitive_list.append(extractTableId(result.linked_resource))
-        
+
         for asset in full_list:
             if asset in sensitive_list:
                 result_list.append(
@@ -61,4 +61,4 @@ class AssetsScope:
                           str(config["ASSETS_SCOPE"]["batch_max_size"]),
                           str(config["ASSETS_SCOPE"]["batch_max_bytes"]),
                           str(config["ASSETS_SCOPE"]["batch_max_latency"]),
-                          result_list)        
+                          result_list)

@@ -31,14 +31,14 @@ do
     fi
 done
 
-## Grant the service account used to run the setup the `serviceusage.services.enable` role.
-#gcloud projects add-iam-policy-binding $PROJECT_ID_DATA \
-#    --member="user:$AUTHENTICATED_USER" \
-#    --role="roles/serviceusage.serviceUsageAdmin"
-#
-#gcloud projects add-iam-policy-binding $PROJECT_ID_GOV \
-#    --member="user:$AUTHENTICATED_USER" \
-#    --role="roles/serviceusage.serviceUsageAdmin"
+# Grant the service account used to run the setup the `serviceusage.services.enable` role.
+gcloud projects add-iam-policy-binding $PROJECT_ID_DATA \
+    --member="user:$AUTHENTICATED_USER" \
+    --role="roles/serviceusage.serviceUsageAdmin"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID_GOV \
+    --member="user:$AUTHENTICATED_USER" \
+    --role="roles/serviceusage.serviceUsageAdmin"
 
 
 # Activate the required APIs for all the projects

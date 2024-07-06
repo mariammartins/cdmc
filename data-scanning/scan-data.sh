@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# This script creates a pythnon virtual environment installs the dependencies and 
+# This script creates a pythnon virtual environment installs the dependencies and
 # then runs the script to run the DLP inspection immediately.
 
 # Install virtual environment and activate
@@ -26,10 +26,4 @@ pip install -r requirements.txt
 
 # Run Inspection now
 python3 inspect_datasets_schedule.py --scan_period_days 0
-
-
-
-
-  
-
 

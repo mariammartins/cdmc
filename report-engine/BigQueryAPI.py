@@ -36,7 +36,7 @@ def getTablePolicyTagsDict(asset):
     table = client.get_table(table_id)
     for field in table.schema:
         if(field.policy_tags != None):
-            table_dict[field.name.upper()]=getPolicyTagInfo(field.policy_tags.names[0]).upper() 
+            table_dict[field.name.upper()]=getPolicyTagInfo(field.policy_tags.names[0]).upper()
     return table_dict
 
 def extractTableId(asset):

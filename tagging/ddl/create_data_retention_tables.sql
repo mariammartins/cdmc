@@ -6,4 +6,4 @@ insert into data_retention.retention_policy values('Personal_Identifiable_Inform
 insert into data_retention.retention_policy values('Sensitive_Personal_Information', 'us-central1', 180, 'Archive');
 insert into data_retention.retention_policy values('Personal_Information', 'us-central1', 180, 'Archive');
 
-		
+

@@ -28,7 +28,7 @@ class Control9:
         self.avsc_file = avsc_file
         self.report_metadata = report_metadata
         self.config_file = config_file
-    
+
     def generateReport(self):
         config = configparser.ConfigParser()
         config.read(self.config_file)
@@ -42,16 +42,16 @@ class Control9:
                                   str(config["SQL"]["sql_file_9_encrypt"]))
         dict_encrypt = defaultdict(list)
         for row in bq_sec_encrypt:
-            dict_encrypt[row["sensitive_category"].upper()+ "-" +row["pm_geo"].upper()].append(row["encrypt_method"].upper()) 
-            dict_encrypt[row["sensitive_category"].upper()+ "-" +row["pm_geo"].upper()].append(row["default_encrypt_method"].upper()) 
+            dict_encrypt[row["sensitive_category"].upper()+ "-" +row["pm_geo"].upper()].append(row["encrypt_method"].upper())
+            dict_encrypt[row["sensitive_category"].upper()+ "-" +row["pm_geo"].upper()].append(row["default_encrypt_method"].upper())
 
         bq_sec_dedid = queryTable(str(config["SQL"]["project_id_9"]),
                                   str(config["SQL"]["dataset_9"]),
-                                  str(config["SQL"]["sql_file_9_deid"]))     
+                                  str(config["SQL"]["sql_file_9_deid"]))
         dict_deid = defaultdict(list)
         for row in bq_sec_dedid:
-            dict_deid[row["sensitive_category"].upper()+ "-" +row["pm_geo"].upper()].append(row["deid_method"].upper()) 
-            dict_deid[row["sensitive_category"].upper()+ "-" +row["pm_geo"].upper()].append(row["default_deid_method"].upper())                                                           
+            dict_deid[row["sensitive_category"].upper()+ "-" +row["pm_geo"].upper()].append(row["deid_method"].upper())
+            dict_deid[row["sensitive_category"].upper()+ "-" +row["pm_geo"].upper()].append(row["default_deid_method"].upper())
 
         for result in dc_results:
             table_location = getTableLocation(result.linked_resource)
@@ -59,7 +59,7 @@ class Control9:
             asset_encrypt = getTableTagValue(result.relative_resource_name,str(config["TAGS"]["Control9_tag_encrypt"]), str(config["TAGS"]["Control9_display_encrypt"]), "stringValue")
             columns_sensitivity_dict = getColumnTagDict(result.relative_resource_name, str(config["TAGS"]["Control9_tag_column_sensitivity"]), str(config["TAGS"]["Control9_display_table_sensivity"]),"boolValue")
             columns_security_deid = getColumnTagDict(result.relative_resource_name, str(config["TAGS"]["Control9_tag_column_deid"]), str(config["TAGS"]["Control9_display_column_deid"]),"stringValue")
-            
+
             #ASSET WITH INCORRECT ENCRYPTION
             if asset_encrypt not in dict_encrypt[table_sensitivity.upper() + "-" + table_location.upper()]:
                 message_enc = {
@@ -74,7 +74,7 @@ class Control9:
                 publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message_enc)
 
             for key in columns_sensitivity_dict:
-                #IF SENSITIVE WITHOUT DEID OR SENSITIVE WITHOUT APP DEID OR 
+                #IF SENSITIVE WITHOUT DEID OR SENSITIVE WITHOUT APP DEID OR
                 if (key not in  columns_security_deid.keys()):
                     message_no_enc = {
                         "reportMetadata":self.report_metadata,
@@ -85,9 +85,9 @@ class Control9:
                         "ExecutionTimestamp":str(time.time())
                     }
                     print("|---- Finding in asset:" + result.linked_resource)
-                    publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message_no_enc)                    
-                else:    
-                    #COLUMN ASSIGNED DEID IS NOT IN TABLE CONTROL IN BQ                   
+                    publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message_no_enc)
+                else:
+                    #COLUMN ASSIGNED DEID IS NOT IN TABLE CONTROL IN BQ
                     if (columns_security_deid[key] not in dict_deid[table_sensitivity.upper() + "-" + table_location.upper()]):
                         message_deid = {
                             "reportMetadata":self.report_metadata,
@@ -98,4 +98,4 @@ class Control9:
                             "ExecutionTimestamp":str(time.time())
                         }
                         print("|---- Finding in asset:" + result.linked_resource)
-                        publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message_deid)                 
+                        publishPubSubAvro(self.topic_project_id,self.topic,self.avsc_file,message_deid)

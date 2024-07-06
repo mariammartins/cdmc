@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-## This script performs the basic setup for the projects 
-## Including creating the required GCP services and setting up the 
+## This script performs the basic setup for the projects
+## Including creating the required GCP services and setting up the
 ## environment with the required dependencies
 
 
@@ -34,13 +34,13 @@ do
     gsutil -m cp -r ${d}/ gs://${GCS_BUCKET_TPCDI}/staging/
 done
 
-# Remove the unzipped files 
+# Remove the unzipped files
 #rm -r unzipped
 popd
 
-# Install python dependencies 
+# Install python dependencies
 echo -e "\nInstalling python dependencies: "
-python3 -m pip install -r requirements.txt 
+python3 -m pip install -r requirements.txt
 
 # Load the data
 echo -e "\nLoading data into BigQuery: "
