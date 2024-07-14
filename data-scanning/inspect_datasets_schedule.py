@@ -20,15 +20,14 @@ import argparse
 import subprocess
 import requests
 
-
 # Get project values from environment variables
 
 region = os.getenv('REGION')
 inspect_project = os.getenv('PROJECT_ID_DATA')
-inspect_datasets = ['crm', 'hr', 'oltp','reference', 'sales']
+inspect_datasets = ['crm', 'hr', 'oltp','reference', 'sales', 'finwire']
 
 result_project = os.getenv('PROJECT_ID_GOV')
-result_datasets = ['crm_dlp','hr_dlp', 'oltp_dlp','reference_dlp', 'sales_dlp']
+result_datasets = ['crm_dlp','hr_dlp', 'oltp_dlp','reference_dlp', 'sales_dlp', 'finwire_dlp']
 
 bq_client = bigquery.Client(project=inspect_project)
 bq_client_results = bigquery.Client(project=result_project)
@@ -158,7 +157,9 @@ def start_job(inspect_dataset, table, result_dataset,scan_period_days, token):
         print(f"Successfully created trigger {response.name}")
 
 def create_output_datasets():
-    for dataset in result_datasets:
+    for dataset_ref in result_datasets:
+        dataset = bigquery.Dataset(f"{result_project}.{dataset_ref}")
+        dataset.location = region
         try:
             bq_client_results.get_dataset(dataset)  # Checks if dataset exists.
             print(f'Dataset {dataset} already exists')
