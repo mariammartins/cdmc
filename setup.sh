@@ -17,19 +17,19 @@
 ## Including creating the required GCP services and setting up the
 ## environment with the required dependencies
 source environment-variables.sh
-export GOOGLE_PROJECT=$PROJECT_ID_GOV
+# export GOOGLE_PROJECT=$PROJECT_ID_GOV
 
-## Ensure Billing is enable in all projects
-declare -a PROJECTS=($PROJECT_ID_DATA $PROJECT_ID_GOV)
-for p in "${PROJECTS[@]}"
-do
-    :
-    p_HAS_BILLING="$(gcloud beta billing projects describe $p | grep billingEnabled | cut -f2 -d' ')"
-    if [[ $p_HAS_BILLING == "false" ]]; then
-        echo "\n\nERROR: Billing account for project '$p' is not found. Billing must be enabled to run script."
-        return 1
-    fi
-done
+# ## Ensure Billing is enable in all projects
+# declare -a PROJECTS=($PROJECT_ID_DATA $PROJECT_ID_GOV)
+# for p in "${PROJECTS[@]}"
+# do
+#     :
+#     p_HAS_BILLING="$(gcloud beta billing projects describe $p | grep billingEnabled | cut -f2 -d' ')"
+#     if [[ $p_HAS_BILLING == "false" ]]; then
+#         echo "\n\nERROR: Billing account for project '$p' is not found. Billing must be enabled to run script."
+#         return 1
+#     fi
+# done
 
 ## Grant the service account used to run the setup the `serviceusage.services.enable` role.
 #gcloud projects add-iam-policy-binding $PROJECT_ID_DATA \
@@ -40,6 +40,9 @@ done
 #    --member="user:$AUTHENTICATED_USER" \
 #    --role="roles/serviceusage.serviceUsageAdmin"
 
+gcloud iam service-accounts add-iam-policy-binding $PROJECT_GOV_CLOUD_BUILD_SA \
+    --member="user:$AUTHENTICATED_USER" \
+    --role="roles/iam.serviceAccountTokenCreator"
 
 # Activate the required APIs for all the projects
 for p in "${PROJECTS[@]}"
@@ -107,6 +110,7 @@ gcloud config set project $PROJECT_ID_DATA
 gcloud projects add-iam-policy-binding ${PROJECT_ID_DATA} \
   --member=serviceAccount:${PROJECT_NUMBER_GOV}-compute@developer.gserviceaccount.com \
   --role=roles/bigquery.user
+
 gcloud projects add-iam-policy-binding ${PROJECT_ID_DATA} \
   --member=serviceAccount:${PROJECT_NUMBER_GOV}-compute@developer.gserviceaccount.com \
   --role=roles/bigquery.dataViewer
@@ -135,9 +139,32 @@ bq --location=${REGION} mk ${PROJECT_ID_GOV}:${TAG_HISTORY_BIGQUERY_DATASET}
 gcloud projects add-iam-policy-binding ${PROJECT_ID_GOV} \
   --member=serviceAccount:${PROJECT_NUMBER_GOV}-compute@developer.gserviceaccount.com \
   --role=roles/logging.logWriter
+
 gcloud projects add-iam-policy-binding ${PROJECT_ID_GOV} \
   --member=serviceAccount:${PROJECT_NUMBER_GOV}-compute@developer.gserviceaccount.com \
   --role=roles/bigquery.admin
+
 gcloud projects add-iam-policy-binding ${PROJECT_ID_GOV} \
   --member=serviceAccount:${PROJECT_NUMBER_GOV}-compute@developer.gserviceaccount.com \
   --role=roles/serviceusage.serviceUsageConsumer
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID_GOV} \
+  --member=serviceAccount:${PROJECT_NUMBER_GOV}-compute@developer.gserviceaccount.com \
+  --role=roles/storage.objectViewer
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID_GOV} \
+  --member=serviceAccount:${PROJECT_NUMBER_GOV}-compute@developer.gserviceaccount.com \
+  --role=roles/cloudbuild.builds.builder
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID_GOV} \
+  --member=serviceAccount:${PROJECT_NUMBER_GOV}-compute@developer.gserviceaccount.com \
+  --role=roles/artifactregistry.writer
+
+# # Grant permission to the Cloud Build service account in the governance project
+# gcloud projects add-iam-policy-binding ${PROJECT_ID_GOV} \
+#   --member=serviceAccount:${PROJECT_NUMBER_GOV}@cloudbuild.gserviceaccount.com \
+#   --role=roles/artifactregistry.writer
+
+# gcloud projects add-iam-policy-binding ${PROJECT_ID_GOV} \
+#   --member=serviceAccount:${PROJECT_NUMBER_GOV}@cloudbuild.gserviceaccount.com \
+#   --role=roles/storage.objectViewer
