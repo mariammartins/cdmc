@@ -16,14 +16,14 @@ This guide assumes that you have already completed the data ingestion deployment
 ```
 cd tag_templates
 pip install -r requirements.txt
-python create_template.py $PROJECT_ID_DATA $REGION cdmc_controls.yaml
-python create_template.py $PROJECT_ID_DATA $REGION completeness_template.yaml
-python create_template.py $PROJECT_ID_DATA $REGION correctness_template.yaml
-python create_template.py $PROJECT_ID_DATA $REGION cost_metrics.yaml
-python create_template.py $PROJECT_ID_DATA $REGION data_sensitivity.yaml
-python create_template.py $PROJECT_ID_DATA $REGION impact_assessment.yaml
-python create_template.py $PROJECT_ID_DATA $REGION security_policy.yaml
-python create_template.py $PROJECT_ID_DATA $REGION uniqueness_template.yaml
+python3 create_template.py $PROJECT_ID_DATA $REGION cdmc_controls.yaml
+python3 create_template.py $PROJECT_ID_DATA $REGION completeness_template.yaml
+python3 create_template.py $PROJECT_ID_DATA $REGION correctness_template.yaml
+python3 create_template.py $PROJECT_ID_DATA $REGION cost_metrics.yaml
+python3 create_template.py $PROJECT_ID_DATA $REGION data_sensitivity.yaml
+python3 create_template.py $PROJECT_ID_DATA $REGION impact_assessment.yaml
+python3 create_template.py $PROJECT_ID_DATA $REGION security_policy.yaml
+python3 create_template.py $PROJECT_ID_DATA $REGION uniqueness_template.yaml
 cd ..
 ```
 
@@ -31,8 +31,13 @@ cd ..
 
 ```
 cd policy_tags
+cp taxonomy.yaml.example taxonomy.yaml
+sed -i "s/<PROJECT_ID_GOV>/$PROJECT_ID_GOV/" taxonomy.yaml
+sed -i "s/<REGION>/$REGION/" taxonomy.yaml
+sed -i "s/<AUTHENTICATED_USER>/$AUTHENTICATED_USER/" taxonomy.yaml
+
 pip install -r requirements.txt
-python create_policy_tag_taxonomy.py taxonomy.yaml
+python3 create_policy_tag_taxonomy.py taxonomy.yaml
 cd ..
 ```
 
@@ -46,6 +51,7 @@ bq mk --location=$REGION --dataset data_retention
 bq mk --location=$REGION --dataset impact_assessment
 bq mk --location=$REGION --dataset entitlement_management
 bq mk --location=$REGION --dataset security_policy
+bq mk --location=$REGION --dataset remote_functions
 
 bq query < create_data_classification_tables.sql
 bq query < create_data_retention_tables.sql

@@ -21,21 +21,21 @@ pushd ../
 source environment-variables.sh
 popd
 
-# Create Data Catalog tag templates and policy tag taxonomy
+# # Create Data Catalog tag templates and policy tag taxonomy
 echo -e "#### Part 1: Data Catalog tag templates and policy tag taxonomy"
 echo -e "1. Create the Data Catalog tag templates"
 
-pushd tag_templates
-pip install -r requirements.txt
-python create_template.py $PROJECT_ID_DATA $REGION cdmc_controls.yaml
-python create_template.py $PROJECT_ID_DATA $REGION completeness_template.yaml
-python create_template.py $PROJECT_ID_DATA $REGION correctness_template.yaml
-python create_template.py $PROJECT_ID_DATA $REGION cost_metrics.yaml
-python create_template.py $PROJECT_ID_DATA $REGION data_sensitivity.yaml
-python create_template.py $PROJECT_ID_DATA $REGION impact_assessment.yaml
-python create_template.py $PROJECT_ID_DATA $REGION security_policy.yaml
-python create_template.py $PROJECT_ID_DATA $REGION uniqueness_template.yaml
-popd
+# pushd tag_templates
+# pip install -r requirements.txt
+# python3 create_template.py $PROJECT_ID_DATA $REGION cdmc_controls.yaml
+# python3 create_template.py $PROJECT_ID_DATA $REGION completeness_template.yaml
+# python3 create_template.py $PROJECT_ID_DATA $REGION correctness_template.yaml
+# python3 create_template.py $PROJECT_ID_DATA $REGION cost_metrics.yaml
+# python3 create_template.py $PROJECT_ID_DATA $REGION data_sensitivity.yaml
+# python3 create_template.py $PROJECT_ID_DATA $REGION impact_assessment.yaml
+# python3 create_template.py $PROJECT_ID_DATA $REGION security_policy.yaml
+# python3 create_template.py $PROJECT_ID_DATA $REGION uniqueness_template.yaml
+# popd
 
 echo -e "2. Create the policy tag taxonomy"
 pushd policy_tags
@@ -48,7 +48,7 @@ sed -i "s/<AUTHENTICATED_USER>/$AUTHENTICATED_USER/" taxonomy.yaml
 
 # Execute scripts
 pip install -r requirements.txt
-python create_policy_tag_taxonomy.py taxonomy.yaml
+python3 create_policy_tag_taxonomy.py taxonomy.yaml
 popd
 
 
@@ -65,12 +65,12 @@ bq mk --location=$REGION --dataset security_policy
 bq mk --location=$REGION --dataset remote_functions
 
 # Create dlp results datasets
-bq mk --location=$REGION --dataset crm_dlp
-bq mk --location=$REGION --dataset finwire_dlp
-bq mk --location=$REGION --dataset hr_dlp
-bq mk --location=$REGION --dataset oltp_dlp
-bq mk --location=$REGION --dataset reference_dlp
-bq mk --location=$REGION --dataset sales_dlp
+# bq mk --location=$REGION --dataset crm_dlp
+# bq mk --location=$REGION --dataset finwire_dlp
+# bq mk --location=$REGION --dataset hr_dlp
+# bq mk --location=$REGION --dataset oltp_dlp
+# bq mk --location=$REGION --dataset reference_dlp
+# bq mk --location=$REGION --dataset sales_dlp
 
 # Create the tables
 pushd ddl

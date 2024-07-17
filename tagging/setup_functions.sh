@@ -18,16 +18,22 @@
 # Function names are consistent with folder names
 
 # Environment variables
+pushd ..
+source environment-variables.sh
+popd
+
+gcloud config set project ${PROJECT_ID_GOV}
+
 pushd remote_functions/bytes_transferred
 #Create the Cloud Function
 gcloud functions deploy get_bytes_transferred \
---runtime python37 \
+--runtime python39 \
 --trigger-http \
 --no-allow-unauthenticated \
 --ingress-settings internal-and-gclb \
 --entry-point event_handler \
 --source ./function \
---set-env-vars REGION=$REGION,PROJECT_ID_DATA=$PROJECT_ID_DATA
+--set-env-vars REGION=$REGION,PROJECT_ID_DATA=$PROJECT_ID_DATA \
 
 source ./create_remote_function.sh
 popd
@@ -35,7 +41,7 @@ popd
 pushd remote_functions/location_policy
 #Create the Cloud Function
 gcloud functions deploy get_location_policy \
---runtime python37 \
+--runtime python39 \
 --trigger-http \
 --no-allow-unauthenticated \
 --ingress-settings internal-and-gclb \
@@ -63,7 +69,7 @@ popd
 pushd remote_functions/table_encryption_method
 #Create the Cloud Function
 gcloud functions deploy get_table_encryption_method \
---runtime python37 \
+--runtime python39 \
 --trigger-http \
 --no-allow-unauthenticated \
 --ingress-settings internal-and-gclb \
@@ -77,7 +83,7 @@ popd
 pushd remote_functions/ultimate_source
 #Create the Cloud Function
 gcloud functions deploy get_ultimate_source \
---runtime python37 \
+--runtime python39 \
 --trigger-http \
 --no-allow-unauthenticated \
 --ingress-settings internal-and-gclb \
